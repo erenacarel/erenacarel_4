@@ -1,0 +1,31 @@
+ESP32Wroom32 ile PCF8563 RTC entegresi beraber kullanılmıştır.
+
+ Burada ilk başta main.c dosyası hariç ilgili dosyaları hep include sekmesinde toplamıştım. Ardından
+bu kodu çalıştırmada "undefined referance to main.c" gibi hatalar aldım. Yani main.c'deki fonksiyonları 
+görmüyordum. Bu hatayı düzeltmek için src klasöründe yer alan "CMAkeLists.txt" dosyasını yeniden 
+düzenlemem gerektiğini tespit ettim. 
+/*
+* # This file was automatically generated for projects
+* # without default 'CMakeLists.txt' file.
+*
+* FILE(GLOB_RECURSE app_sources ${CMAKE_SOURCE_DIR}/src/*.*)
+*
+* idf_component_register(SRCS ${app_sources})
+*/
+src klasöründeki revize etmediğim CmakeLists.txt dosyası buna benzer şekildedir.
+
+Bundan sonra yaptığım şey ise pcf8563 adlı bir klasörü src klasörünün içerisinde oluşturmak oldu.
+Ardından src klasöründeki CMakeList.txt dosyasını
+/*
+* idf_component_register(SRCS "main.c"
+* "pcf8563/i2cdev.c" "pcf8563/pcf8563.c"
+* INCLUDE_DIRS "." "pcf8563")
+*/
+görüldüğü şekilde revize ettim. 
+main.c'deki ve ilgili kütüphanelerde #include şeklinde kütüphaneleri dahil ederken klasörün yolunu
+da gösterdim. Örneğin;
+#include "pcf8563/pcf8563.h"
+#include "pcf8563/i2cdev.h"
+#include <pcf8563/esp_idf_lib_helpers.h>
+
+
